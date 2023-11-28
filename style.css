@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'inter', sans-serif;
+    transition: background-color 0.65s;
+}
+
+main {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+}
+
+.sidebar {
+    width: 60px;
+    background-color: #dd203c;
+}
+
+.chat {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+h1 {
+    font-size: 96px;
+    font-weight: bold;
+    margin: 40px 0;
+}
+
+.pergunta {
+    display: flex;
+    margin: 15vh 0;
+    background-color: white;
+    transition: background-color 0.65s;
+}
+
+input {
+    width: 800px;
+    font-size: 24px;
+    border: none;
+    border-bottom: solid 1px #272727;
+    outline: none;
+    padding: 10px 0;
+    transition: background-color 0.65s;
+}
+
+button{
+    background-color: #dd203c;
+    padding: 20px 25px;
+    border-radius: 50%;
+    border:  none;
+    color: white;
+    cursor: pointer;
+    font-size: 20px;
+    transition: background-color 0.65s;
+}
+
+
+body.dark-mode {
+    background-color: #272727;
+    color: #fff;
+    transition: background-color 0.65s;
+    
+}
+
+.pergunta input {
+    width: 800px;
+    font-size: 24px;
+    border: none;
+    outline: none;
+    padding: 10px 0;
+    transition: background-color 0.65s, color 0.65s; /* Adicionamos uma transição para uma animação suave */
+}
+
+/* Adicione essas regras para o modo claro */
+body:not(.dark-mode) .pergunta input {
+    background-color: #fff;
+    color: #272727;
+    border-bottom: solid 1px #272727;
+    transition: background-color 0.65s;
+    
+}
+
+body:not(.dark-mode) #toggle-mode{
+    background-color: #fff;
+    color: #272727;
+    border-bottom: solid 1px #272727;
+    border:none;
+    transition: background-color 0.65s;
+}
+
+/* Adicione essas regras para o modo escuro */
+body.dark-mode .pergunta input
+ {
+    background-color: #272727;
+    color: #fff;
+    border-bottom: solid 1px #fff; /* Ajuste a cor da borda para se destacar no modo escuro */
+    transition: background-color 0.65s;
+}
+
+body.dark-mode .pergunta{
+    background-color: #272727;
+    color: #fff;
+    transition: background-color 0.65s;
+  }
+
+ #toggle-mode{
+    background-color: transparent;
+    padding: 15px;
+    border-radius: 50%; 
+    font-size: 20px;
+    position: absolute;
+    top: 10px; 
+    right: 10px; 
+    transition: background-color 0.65s;
+ }
