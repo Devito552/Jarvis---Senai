@@ -1,3 +1,5 @@
+// modo escuro e claro
+
 document.addEventListener('DOMContentLoaded', function () {
     const toggleButton = document.getElementById('toggle-mode');
     const body = document.body;
@@ -22,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
         body.classList.add('dark-mode');
         localStorage.setItem('mode', 'dark');
         toggleButton.innerHTML = '<i class="fas fa-sun"></i>';
+      
     }
 
     // Função para ativar o modo claro
@@ -29,9 +32,9 @@ document.addEventListener('DOMContentLoaded', function () {
         body.classList.remove('dark-mode');
         localStorage.setItem('mode', 'light');
         toggleButton.innerHTML = '<i class="fas fa-moon"></i>';
+     
     }
 });
-
 
 // API OpenAI
 
@@ -39,7 +42,7 @@ const ConsultarOpenAI = async(pergunta) => {
 
 var myHeaders = new Headers();
 myHeaders.append("Content-Type", "application/json");
-myHeaders.append("Authorization", "Bearer Chave API OpenAI");
+myHeaders.append("Authorization", APIOpenAI);
 myHeaders.append("Cookie", "__cf_bm=kMUEoHjtMzklj3W_GajmYdHLQgI6vkP.gN8RFW0vmRo-1701178894-0-AezxRH5TomZBEiVpbGUik8o9S8Nx0Y9fDS4i5jzNaNHLrTYvvpq5thdeUzys9xdDiZNhW5yPGdRBS5MsmfqLFKg=; _cfuvid=ZvHhSFIW0uRoFz_8gm8f9Ot31a_omOQczXppe7jYemA-1701178894004-0-604800000");
 
 var raw = JSON.stringify({
@@ -66,7 +69,7 @@ var requestOptions = {
 
 fetch("https://api.openai.com/v1/chat/completions", requestOptions)
   .then(response => response.json())
-  .then(result => console.log(result.choices[0].message.content))
+  .then(result => ReproduzirVoz(result.choices[0].message.content))
   .catch(error => console.log('error', error));
 
 }
@@ -96,6 +99,46 @@ const CapturarVoz = () => {
         ConsultarOpenAI(textoCapturado);
 
     });
+}
+
+// Reproduz texto pelo azure TTS
+
+const ReproduzirVoz = (resposta) => {
+
+  var myHeaders = new Headers();
+  myHeaders.append("Ocp-Apim-Subscription-Key", APIAzureTTS);
+  myHeaders.append("Content-Type", "application/ssml+xml");
+  myHeaders.append("X-Microsoft-OutputFormat", "audio-16khz-128kbitrate-mono-mp3");
+  myHeaders.append("User-Agent", "curl");
+
+var raw = "<speak version='1.0' xml:lang='pt-BR'>\r\n    <voice xml:lang='pt-BR' xml:gender='Female' name='pt-BR-ElzaNeural'>\r\n  " +resposta+ "\r\n    </voice>\r\n</speak>";
+
+var requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  body: raw,
+  redirect: 'follow'
+};
+
+fetch("https://brazilsouth.tts.speech.microsoft.com/cognitiveservices/v1", requestOptions)
+.then(response => {
+  if (response.ok) {
+      return response.arrayBuffer();
+  } else {
+      throw new Error(`Falha na requisição: ${response.status} - ${response.statusText}`);
+  }
+})
+.then(data => {
+  const blob = new Blob([data], { type: 'audio/mpeg' });
+  const audioUrl = URL.createObjectURL(blob);
+
+  const audioElement = new Audio(audioUrl);
+  audioElement.play();
+})
+.catch(error => {
+  console.error('Erro:', error);
+});
+
 }
 
 CapturarVoz();
