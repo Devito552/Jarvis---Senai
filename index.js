@@ -1,12 +1,42 @@
+// Chaves de API
+
+const GetKey = (service, callback) => {
+  fetch('keys.json')
+    .then(response => response.json())
+    .then(data => {
+      callback(data[service]);
+    })
+    .catch(error => console.error(error));
+};
+
+let APIOpenAI;
+let APIAzureTTS;
+
+GetKey('openai', (key) => {
+  APIOpenAI = key;
+});
+
+GetKey('microsoft', (key) => {
+  APIAzureTTS = key;
+});
+
+//interacao primeiro click
+
+let h1 = document.querySelector('h1');
+h1.click();
+
+
 // modo escuro e claro
 // Defina as funções no escopo global
 function enableDarkMode() {
+
   const body = document.body;
   const toggleButton = document.getElementById('toggle-mode');
-  
+
   body.classList.add('dark-mode');
   localStorage.setItem('mode', 'dark');
   toggleButton.innerHTML = '<i class="fas fa-sun"></i>';
+  
 }
 
 function enableLightMode() {
@@ -54,13 +84,16 @@ function VoltarIcon() {
   iconElement.innerHTML = '<i class="fas fa-microphone"></i>';
   iconElement.style.backgroundColor = '#dd203c';
 }
+
+
+
 // API OpenAI
 
 const ConsultarOpenAI = async (pergunta) => {
 
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
-  myHeaders.append("Authorization", APIOpenAI);
+  myHeaders.append("Authorization", "Bearer " + APIOpenAI);
   myHeaders.append("Cookie", "__cf_bm=kMUEoHjtMzklj3W_GajmYdHLQgI6vkP.gN8RFW0vmRo-1701178894-0-AezxRH5TomZBEiVpbGUik8o9S8Nx0Y9fDS4i5jzNaNHLrTYvvpq5thdeUzys9xdDiZNhW5yPGdRBS5MsmfqLFKg=; _cfuvid=ZvHhSFIW0uRoFz_8gm8f9Ot31a_omOQczXppe7jYemA-1701178894004-0-604800000");
 
   var raw = JSON.stringify({
@@ -68,7 +101,7 @@ const ConsultarOpenAI = async (pergunta) => {
     "messages": [
       {
         "role": "system",
-        "content": "Jarvis é um chatbot pontual e muito simpático que ajuda as pessoas"
+        "content": "Jarvis é um chatbot ignorante"
       },
       {
         "role": "user",
@@ -108,15 +141,21 @@ const CapturarVoz = () => {
 
   recognition.start();
 
+
   recognition.addEventListener('result', (event) => {
 
     const result = event.results[event.results.length - 1][0].transcript;
 
     if (result.toLowerCase().includes('jarvis')) {
 
-      if (result.toLowerCase().includes('trocar tema')){
+      if (result.toLowerCase().includes('trocar tema')) {
+
         toggleDarkMode();
-        ReproduzirVoz('Tema trocado!')
+
+        ReproduzirVoz('Tema alterado!');
+
+        return;
+
       }
 
       TrocaIcon();
@@ -147,6 +186,7 @@ const CapturarVoz = () => {
 
       // Depois de 5 segundos, reinicie a captura de voz
       setTimeout(() => {
+
         recognition.start();
 
         VoltarIcon();
@@ -197,5 +237,7 @@ const ReproduzirVoz = (resposta) => {
     });
 
 }
+
+
 
 CapturarVoz();
