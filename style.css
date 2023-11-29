@@ -54,15 +54,19 @@ input {
     transition: background-color 0.65s;
 }
 
-button{
+button {
     background-color: #dd203c;
     padding: 20px 25px;
     border-radius: 50%;
-    border:  none;
+    border: none;
     color: white;
     cursor: pointer;
     font-size: 20px;
     transition: background-color 0.65s;
+}
+
+.fa-microphone-slash {
+    font-size: 18px;
 }
 
 
@@ -70,7 +74,6 @@ body.dark-mode {
     background-color: #272727;
     color: #fff;
     transition: background-color 0.65s;
-    
 }
 
 .pergunta input {
@@ -79,7 +82,8 @@ body.dark-mode {
     border: none;
     outline: none;
     padding: 10px 0;
-    transition: background-color 0.65s, color 0.65s; /* Adicionamos uma transição para uma animação suave */
+    transition: background-color 0.65s, color 0.65s;
+    /* Adicionamos uma transição para uma animação suave */
 }
 
 /* Adicione essas regras para o modo claro */
@@ -88,39 +92,38 @@ body:not(.dark-mode) .pergunta input {
     color: #272727;
     border-bottom: solid 1px #272727;
     transition: background-color 0.65s;
-    
 }
 
-body:not(.dark-mode) #toggle-mode{
+body:not(.dark-mode) #toggle-mode {
     background-color: #fff;
     color: #272727;
     border-bottom: solid 1px #272727;
-    border:none;
+    border: none;
     transition: background-color 0.65s;
 }
 
 /* Adicione essas regras para o modo escuro */
-body.dark-mode .pergunta input
- {
+body.dark-mode .pergunta input {
     background-color: #272727;
     color: #fff;
-    border-bottom: solid 1px #fff; /* Ajuste a cor da borda para se destacar no modo escuro */
+    border-bottom: solid 1px #fff;
+    /* Ajuste a cor da borda para se destacar no modo escuro */
     transition: background-color 0.65s;
 }
 
-body.dark-mode .pergunta{
+body.dark-mode .pergunta {
     background-color: #272727;
     color: #fff;
     transition: background-color 0.65s;
-  }
+}
 
- #toggle-mode{
+#toggle-mode {
     background-color: transparent;
     padding: 15px;
-    border-radius: 50%; 
+    border-radius: 50%;
     font-size: 20px;
     position: absolute;
-    top: 10px; 
-    right: 10px; 
+    top: 10px;
+    right: 10px;
     transition: background-color 0.65s;
- }
+}
