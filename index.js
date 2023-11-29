@@ -1,54 +1,63 @@
 // modo escuro e claro
+// Defina as funções no escopo global
+function enableDarkMode() {
+  const body = document.body;
+  const toggleButton = document.getElementById('toggle-mode');
+  
+  body.classList.add('dark-mode');
+  localStorage.setItem('mode', 'dark');
+  toggleButton.innerHTML = '<i class="fas fa-sun"></i>';
+}
+
+function enableLightMode() {
+  const body = document.body;
+  const toggleButton = document.getElementById('toggle-mode');
+
+  body.classList.remove('dark-mode');
+  localStorage.setItem('mode', 'light');
+  toggleButton.innerHTML = '<i class="fas fa-moon"></i>';
+}
+
+function toggleDarkMode() {
+  const currentMode = localStorage.getItem('mode');
+  if (currentMode === 'dark') {
+    enableLightMode();
+  } else {
+    enableDarkMode();
+  }
+}
 
 document.addEventListener('DOMContentLoaded', function () {
   const toggleButton = document.getElementById('toggle-mode');
-  const body = document.body;
+
+  // Adicionar um ouvinte de evento para alternar entre os modos
+  toggleButton.addEventListener('click', toggleDarkMode);
 
   // Verificar o modo atual e ajustar o texto do botão
   const currentMode = localStorage.getItem('mode');
   if (currentMode === 'dark') {
     enableDarkMode();
-  }
-
-  // Adicionar um ouvinte de evento para alternar entre os modos
-  toggleButton.addEventListener('click', function () {
-    if (body.classList.contains('dark-mode')) {
-      enableLightMode();
-    } else {
-      enableDarkMode();
-    }
-  });
-
-  // Função para ativar o modo escuro
-  function enableDarkMode() {
-    body.classList.add('dark-mode');
-    localStorage.setItem('mode', 'dark');
-    toggleButton.innerHTML = '<i class="fas fa-sun"></i>';
-
-  }
-
-  // Função para ativar o modo claro
-  function enableLightMode() {
-    body.classList.remove('dark-mode');
-    localStorage.setItem('mode', 'light');
-    toggleButton.innerHTML = '<i class="fas fa-moon"></i>';
-
+  } else {
+    enableLightMode();
   }
 });
+
 
 function TrocaIcon() {
   var iconElement = document.getElementById("capture");
   iconElement.innerHTML = '<i class="fas fa-microphone-slash"></i>';
+  iconElement.style.backgroundColor = 'green';
 }
 
 function VoltarIcon() {
   var iconElement = document.getElementById("capture");
   iconElement.innerHTML = '<i class="fas fa-microphone"></i>';
+  iconElement.style.backgroundColor = '#dd203c';
 }
 // API OpenAI
 
 const ConsultarOpenAI = async (pergunta) => {
- 
+
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("Authorization", APIOpenAI);
@@ -94,23 +103,59 @@ const CapturarVoz = () => {
   var recognition = new webkitSpeechRecognition();
 
   recognition.lang = window.navigator.language;
-  recognition.interimResults = true;
+  recognition.interimResults = false;
+  recognition.continuous = true;
 
-  startButton.addEventListener('click', () => { recognition.start(); });
-
+  recognition.start();
 
   recognition.addEventListener('result', (event) => {
+
     const result = event.results[event.results.length - 1][0].transcript;
-    resultElement.value = result;
+
+    if (result.toLowerCase().includes('jarvis')) {
+
+      if (result.toLowerCase().includes('trocar tema')){
+        toggleDarkMode();
+        ReproduzirVoz('Tema trocado!')
+      }
+
+      TrocaIcon();
+
+      // Comece a salvar a pergunta quando "Jarvis" é detectado
+      let array_pergunta = result.toLowerCase().split(/(jarvis)/);
+
+      // Remova o que vem antes de "Jarvis"
+      array_pergunta.shift();
+      // ["Jarvis", "qual é a previsão", "Jarvis", "do tempo?"]
+      //     0             1                 2          3
+
+      // ['jarvis', ' quem é o ', 'jarvis', ' na marvel']
+      // Remover o primeiro "Jarvis" do array
+      array_pergunta.shift();
+
+      // Unir o restante do array em uma string
+      array_pergunta = array_pergunta.join('');
+
+      // Escrevemos no input a pergunta
+      resultElement.value = array_pergunta;
+
+      // Pare a captura de voz
+      recognition.stop();
+
+      // Consulte a API do OpenAI
+      ConsultarOpenAI(array_pergunta);
+
+      // Depois de 5 segundos, reinicie a captura de voz
+      setTimeout(() => {
+        recognition.start();
+
+        VoltarIcon();
+
+      }, 5000);
+    }
   });
 
-  recognition.addEventListener('end', () => {
-    const textoCapturado = resultElement.value;
-    // ConsultarOpenAI(textoCapturado);
-    ReproduzirVoz(textoCapturado);
-    VoltarIcon();
 
-  });
 }
 
 // Reproduz texto pelo azure TTS
