@@ -182,8 +182,8 @@ const CapturarVoz = () => {
       recognition.stop();
 
       // Consulte a API do OpenAI
-      // ConsultarOpenAI(array_pergunta); Desatizado por falta de API paga
-      ReproduzirVoz(array_pergunta);
+      // ConsultarOpenAI(array_pergunta); Desativado por falta de API paga!
+      ReproduzirVoz(array_pergunta);  //ativado por testes apernas!
 
 
       // Depois de 5 segundos, reinicie a captura de voz
